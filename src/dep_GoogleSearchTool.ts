@@ -1,5 +1,5 @@
+import axios from 'axios';
 import { ToolInterface } from './types';
-import { google } from 'googleapis';
 
 interface SearchParams {
   q: string;
@@ -13,15 +13,10 @@ interface SearchResult {
   [key: string]: unknown;
 }
 
-async function _googleSearchResults(params: SearchParams) {
-  const customSearch = google.customsearch('v1');
-  const response = await customSearch.cse.list({
-    cx: params.cx,
-    q: params.q,
-    auth: params.key,
-    num: params.num,
-  });
-  return response.data.items || ([] as SearchResult[]);
+async function _googleSearchResults(params: SearchParams): Promise<SearchResult[]> {
+  const url = 'https://www.googleapis.com/customsearch/v1';
+  const response = await axios.get(url, { params });
+  return response.data.items || [];
 }
 
 async function search(query: string): Promise<string> {
@@ -32,7 +27,7 @@ async function search(query: string): Promise<string> {
     num: 10,
   };
 
-  const res = (await _googleSearchResults(params)) as SearchResult[];
+  const res = await _googleSearchResults(params);
   const snippets: string[] = [];
 
   if (res.length === 0) {
@@ -48,7 +43,7 @@ async function search(query: string): Promise<string> {
   return snippets.join(' ');
 }
 
-class GoogleSearchTool implements ToolInterface {
+class dep_GoogleSearchTool implements ToolInterface {
   name = 'Google Search';
   description =
     "Get specific information from a search query. Input should be a question like 'How to add number in Clojure?'. Result will be the answer to the question.";
@@ -58,4 +53,4 @@ class GoogleSearchTool implements ToolInterface {
   }
 }
 
-export { GoogleSearchTool };
+export { dep_GoogleSearchTool };

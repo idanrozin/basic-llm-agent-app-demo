@@ -1,3 +1,4 @@
+import { ChatLLM } from './ChatLLM';
 import { GoogleSearchTool } from './GoogleSearchTool';
 // import { ToolInterface } from './types';
 
@@ -26,5 +27,11 @@ class Tool extends ToolBase {
 const tool = new Tool('Tool', 'This is a tool');
 console.log(tool.use('Hello, world!')); */
 
-const tool2 = new GoogleSearchTool();
-console.log(tool2.use('Hello, world!'));
+const googleSearchTool = new GoogleSearchTool();
+console.log(googleSearchTool.use('Who is amit mandelbaum?'));
+
+const llm = new ChatLLM();
+const result = llm.generate({
+  messages: [{ role: 'user', content: 'Who is the president of the USA?' }],
+});
+console.log(result);

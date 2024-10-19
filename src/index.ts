@@ -1,37 +1,30 @@
+import Agent from './Agent';
 import { ChatLLM } from './ChatLLM';
 import { GoogleSearchTool } from './GoogleSearchTool';
-// import { ToolInterface } from './types';
 
-function greet(name: string): string {
-  return `Hello, ${name}!`;
+// google search tool example
+async function googleSearch() {
+  const googleSearchTool = new GoogleSearchTool();
+  const result = await googleSearchTool.use('Who is amit mandelbaum?');
+  console.log(result);
 }
 
-console.log(greet('TypeScript'));
-
-/* abstract class ToolBase implements ToolInterface {
-  constructor(public name: string, public description: string) {}
-
-  abstract use(inputText: string): Promise<string>;
+// llm example
+async function chatLLM() {
+  const llm = new ChatLLM();
+  const llmResult = await llm.generate({
+    messages: [{ role: 'user', content: 'Who is the president of the USA?' }],
+  });
+  console.log(llmResult);
 }
 
-class Tool extends ToolBase {
-  constructor(name: string, description: string) {
-    super(name, description);
-  }
-
-  use(inputText: string): Promise<string> {
-    return Promise.resolve(`Using ${this.name}: ${inputText}`);
-  }
+// ReAct agent example
+async function runAgent() {
+  const agent = new Agent(new ChatLLM(), [new GoogleSearchTool()]);
+  const result = await agent.run('Which move generated more money, avengers 1 or 2?');
+  console.log(result);
 }
 
-const tool = new Tool('Tool', 'This is a tool');
-console.log(tool.use('Hello, world!')); */
-
-const googleSearchTool = new GoogleSearchTool();
-console.log(googleSearchTool.use('Who is amit mandelbaum?'));
-
-const llm = new ChatLLM();
-const result = llm.generate({
-  messages: [{ role: 'user', content: 'Who is the president of the USA?' }],
-});
-console.log(result);
+// googleSearch();
+// chatLLM();
+runAgent();

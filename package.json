@@ -6,6 +6,11 @@
     "scripts": {
         "start": "node dist/index.js",
         "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+        "dev:googleSearch": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts -- googleSearch",
+        "dev:chatLLM": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts -- chatLLM",
+        "dev:runAgent": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts -- runAgent",
+        "dev:playground": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts -- playground",
+        "dev:playgroundWithAgent": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts -- playgroundWithAgent",
         "build": "tsc",
         "lint": "eslint . --ext .ts",
         "format": "prettier --write \"src/**/*.ts\"",

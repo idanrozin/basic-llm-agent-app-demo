@@ -46,8 +46,21 @@ async function playgroundWithAgent() {
   console.log('Final answer is:', result);
 }
 
-// googleSearch();
-// chatLLM();
-// runAgent();
-// playground();
-// playgroundWithAgent();
+const functionMap: { [key: string]: () => Promise<void> } = {
+  googleSearch,
+  chatLLM,
+  runAgent,
+  playground,
+  playgroundWithAgent,
+};
+
+const functionName = process.argv[2];
+
+if (functionName && functionName in functionMap) {
+  functionMap[functionName]();
+} else {
+  console.log(
+    'Please specify a valid function name: googleSearch, chatLLM, runAgent, playground, playgroundWithAgent',
+  );
+  process.exit(1);
+}

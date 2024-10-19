@@ -20,8 +20,6 @@ export class ChatLLM {
 
   async generate({
     messages,
-    // documents?: Document[],
-    // tools?: Tool[],
     maxTokens = 2048,
     stop = [],
     n = 1,
@@ -52,9 +50,7 @@ export class ChatLLM {
           },
         },
       );
-
-      // Assuming the response structure. Adjust this based on the actual AI21 chat API response
-      return response.data.output;
+      return response.data.choices[0].message.content;
     } catch (error) {
       console.error('Error generating chat completion:', error);
       throw error;

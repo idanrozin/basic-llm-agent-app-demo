@@ -20,16 +20,28 @@ interface Message {
   content: string;
 }
 
-// interface Document {
-//   // Define the structure of a document if needed
-// }
-
-// interface Tool {
-//   // Define the structure of a tool if needed
-// }
-
 export interface AI21ChatResponse {
-  // Define the structure of the AI21 chat response
-  // This is a placeholder and should be updated based on the actual response structure
-  output: string;
+  id: string;
+  model: string;
+  choices: Array<{
+    index: number;
+    message: {
+      role: string;
+      content: string;
+      tool_calls?: Array<{
+        id: string;
+        type: string;
+        function: {
+          name: string;
+          arguments: Record<string, unknown>;
+        };
+      }> | null;
+    };
+    finish_reason: 'stop' | 'length';
+  }>;
+  usage: {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+  };
 }

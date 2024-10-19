@@ -2,7 +2,7 @@ import assert from 'assert';
 import Agent from './Agent';
 import { ChatLLM } from './ChatLLM';
 import { GoogleSearchTool } from './GoogleSearchTool';
-import { TypescriptCodeRunnerTool } from './playground';
+import { TypescriptCodeRunnerTool } from './codeRunner';
 
 // google search tool example
 async function googleSearch() {

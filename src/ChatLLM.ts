@@ -1,43 +1,49 @@
 import axios from 'axios';
+import dotenv from 'dotenv';
+import { AI21ChatResponse, ChatLLMGeneratePayload } from './types';
 
-interface Message {
-  role: string;
-  content: string;
-}
-
-interface AI21Response {
-  completions: Array<{
-    data: {
-      text: string;
-    };
-  }>;
-}
+dotenv.config();
 
 export class ChatLLM {
-  private model = 'j2-jumbo-instruct';
-  private temperature = 0.0;
+  private model = 'jamba-1.5-large';
+  private temperature = 0.4;
   private apiKey: string;
 
-  constructor(apiKey: string, model?: string, temperature?: number) {
-    this.apiKey = apiKey;
+  constructor(apiKey?: string, model?: string, temperature?: number) {
+    this.apiKey = apiKey || process.env.AI21_API_KEY || '';
+    if (!this.apiKey) {
+      throw new Error('AI21 API key is not set');
+    }
     if (model) this.model = model;
     if (temperature !== undefined) this.temperature = temperature;
   }
 
-  async generate(messages: Message[], stop?: string[]): Promise<string> {
-    const url = `https://api.ai21.com/studio/v1/${this.model}/complete`;
-
-    // Convert messages array to a single prompt string
-    // const prompt = messages.map((msg) => `${msg.role}: ${msg.content}`).join('\n');
+  async generate({
+    messages,
+    // documents?: Document[],
+    // tools?: Tool[],
+    maxTokens = 2048,
+    stop = [],
+    n = 1,
+    topP = 1,
+    responseFormat = { type: 'text' },
+  }: ChatLLMGeneratePayload): Promise<string> {
+    const url = 'https://api.ai21.com/studio/v1/chat/completions';
 
     try {
-      const response = await axios.post<AI21Response>(
+      const response = await axios.post<AI21ChatResponse>(
         url,
         {
+          model: this.model,
           messages,
+          // documents,
+          // tools,
+          n,
+          max_tokens: maxTokens,
           temperature: this.temperature,
-          stopSequences: stop,
-          maxTokens: 200, // You may want to adjust this
+          top_p: topP,
+          stop,
+          response_format: responseFormat,
         },
         {
           headers: {
@@ -47,9 +53,10 @@ export class ChatLLM {
         },
       );
 
-      return response.data.completions[0].data.text;
+      // Assuming the response structure. Adjust this based on the actual AI21 chat API response
+      return response.data.output;
     } catch (error) {
-      console.error('Error generating text:', error);
+      console.error('Error generating chat completion:', error);
       throw error;
     }
   }

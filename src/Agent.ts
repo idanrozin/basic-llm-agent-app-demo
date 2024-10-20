@@ -74,7 +74,9 @@ class Agent {
     while (numLoops < this.maxLoops) {
       numLoops++;
       const currPrompt = prompt.replace('{previous_responses}', previousResponses.join('\n'));
-      const [generated, tool, toolInput] = await this.decideNextAction(currPrompt);
+      const [generated, tool, toolInput] = await this.decideNextAction(
+        currPrompt.replace('\nThought:\n', '').replace('\nThought: \n', ''),
+      );
 
       if (tool === 'Final Answer') {
         return toolInput;
@@ -93,9 +95,9 @@ class Agent {
     throw new Error('Max loops reached without final answer');
   }
 
-  private async decideNextAction(prompt: string): Promise<[string, string, string]> {
+  private async decideNextAction(_prompt: string): Promise<[string, string, string]> {
     const generated = await this.llm.generate({
-      messages: [{ role: 'user', content: prompt }],
+      messages: [{ role: 'user', content: _prompt }],
       stop: this.stopPattern,
     });
     const [tool, toolInput] = this.parse(generated);
@@ -103,11 +105,8 @@ class Agent {
   }
 
   private parse(generated: string): [string, string] {
-    if (!generated.includes(FINAL_ANSWER_TOKEN)) return ['', ''];
-    if (generated.split(FINAL_ANSWER_TOKEN).length > 1) {
-      const finalAnswer = generated.split(FINAL_ANSWER_TOKEN).pop();
-      if (!finalAnswer) return ['', ''];
-      return ['Final Answer', finalAnswer.trim()];
+    if (generated.includes(FINAL_ANSWER_TOKEN)) {
+      return ['Final Answer', (generated.split(FINAL_ANSWER_TOKEN).pop() as string).trim()];
     }
 
     const regex = /Action: [\\[]?(.*?)[\]]?[\n]*Action Input:[\s]*(.*)/s;

@@ -19,6 +19,8 @@ Observation: the result of the action
 Thought: I now know the final answer
 Final Answer: your final answer to the original input question
 
+if code or action input has \`\`\`js or \`\`\`javascript, remove them.
+
 Begin!
 
 Question: {question}

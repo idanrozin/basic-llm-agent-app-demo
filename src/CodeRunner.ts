@@ -54,8 +54,8 @@ export class JavascriptCodeRunnerTool implements ToolInterface {
     this.repl = getDefaultJavascriptCodeRunner();
   }
 
-  async use(input_text: string): Promise<string> {
-    input_text = input_text.trim().replace(/^```|```$/g, '');
-    return this.repl.run(input_text);
+  async use(inputText: string): Promise<string> {
+    inputText = inputText.trim().replace(/^```|```$/g, '');
+    return this.repl.run(inputText);
   }
 }

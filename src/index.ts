@@ -2,7 +2,7 @@ import assert from 'assert';
 import Agent from './Agent';
 import { ChatLLM } from './ChatLLM';
 import { GoogleSearchTool } from './GoogleSearchTool';
-import { TypescriptCodeRunnerTool } from './CodeRunner';
+import { JavascriptCodeRunnerTool } from './CodeRunner';
 
 // google search tool example
 async function googleSearch() {
@@ -29,8 +29,8 @@ async function runAgent() {
 
 // Playground example
 async function playground() {
-  const pythonREPL = new TypescriptCodeRunnerTool();
-  const result = await pythonREPL.use('console.log(5*7)');
+  const REPL = new JavascriptCodeRunnerTool();
+  const result = await REPL.use('console.log(5*7)');
 
   console.log('result:', result);
   const errorMessage = 'result should be 35';
@@ -40,9 +40,9 @@ async function playground() {
 
 // Playground with agent example
 async function playgroundWithAgent() {
-  const agent = new Agent(new ChatLLM(), [new GoogleSearchTool(), new TypescriptCodeRunnerTool()]);
+  const agent = new Agent(new ChatLLM(), [new GoogleSearchTool(), new JavascriptCodeRunnerTool()]);
   const result = await agent.run(
-    'Find me the cost of fuel of flying between tel aviv to houston in ILS, use TypeScript',
+    'Find me the cost of fuel of flying between tel aviv to houston in ILS, use Javascript',
   );
   console.log('Final answer is:', result);
 }

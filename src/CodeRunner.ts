@@ -1,16 +1,16 @@
 import { ToolInterface } from './types';
 type Args = Map<string, unknown>;
 
-interface TypescriptCodeRunnerConstructor {
+interface JavascriptCodeRunnerConstructor {
   globals?: Args;
   locals?: Args | null;
 }
 
-class TypescriptCodeRunner {
+class JavascriptCodeRunner {
   private _globals: Args;
   private _locals: Args | null;
 
-  constructor({ globals = new Map(), locals = new Map() }: TypescriptCodeRunnerConstructor) {
+  constructor({ globals = new Map(), locals = new Map() }: JavascriptCodeRunnerConstructor) {
     this._globals = globals;
     this._locals = locals;
   }
@@ -23,7 +23,7 @@ class TypescriptCodeRunner {
     };
 
     try {
-      // Note: This is a simplified version. In TypeScript, we can't directly
+      // Note: This is a simplified version. In Javascript, we can't directly
       // execute arbitrary code like in Python's exec().
       // You might need to use a JavaScript runtime or interpreter here.
       eval(command);
@@ -37,25 +37,25 @@ class TypescriptCodeRunner {
   }
 }
 
-function getDefaultTypescriptCodeRunner(): TypescriptCodeRunner {
-  return new TypescriptCodeRunner({ locals: null });
+function getDefaultJavascriptCodeRunner(): JavascriptCodeRunner {
+  return new JavascriptCodeRunner({ locals: null });
 }
 
-export class TypescriptCodeRunnerTool implements ToolInterface {
-  name = 'Typescript Code Runner';
+export class JavascriptCodeRunnerTool implements ToolInterface {
+  name = 'Javascript Code Runner';
   description: string =
-    'A Typescript code runner. Use this to execute Typescript commands. ' +
-    'Input should be a valid Typescript command. ' +
+    'A Javascript code runner. Use this to execute Javascript commands. ' +
+    'Input should be a valid Javascript command. ' +
     'If you want to see the output of a value, you should print it out ' +
     'with `console.log(...)`.';
-  python_repl: TypescriptCodeRunner;
+  repl: JavascriptCodeRunner;
 
   constructor() {
-    this.python_repl = getDefaultTypescriptCodeRunner();
+    this.repl = getDefaultJavascriptCodeRunner();
   }
 
   async use(input_text: string): Promise<string> {
     input_text = input_text.trim().replace(/^```|```$/g, '');
-    return this.python_repl.run(input_text);
+    return this.repl.run(input_text);
   }
 }

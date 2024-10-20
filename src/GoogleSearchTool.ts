@@ -1,14 +1,13 @@
 import axios from 'axios';
 import { ToolInterface } from './types';
 import dotenv from 'dotenv';
-import { SearchParams, SearchResult } from './types/GoogleSearchTool';
+import { GoogleSearchResponse, SearchParams } from './types/GoogleSearchTool';
 dotenv.config();
+const URL = 'https://serpapi.com/search';
 
 async function _googleSearchResults(params: SearchParams) {
-  const url = 'https://www.searchapi.io/api/v1/search';
-
   try {
-    const response = await axios.get<SearchResult>(url, { params });
+    const response = await axios.get<GoogleSearchResponse>(URL, { params });
     return response.data.organic_results;
   } catch (error) {
     console.error('Error:', error);
@@ -23,7 +22,7 @@ async function search(query: string): Promise<string> {
     api_key: process.env.SEARCH_API_KEY || '',
   };
 
-  const res = (await _googleSearchResults(params)) as SearchResult['organic_results'];
+  const res = (await _googleSearchResults(params)) as GoogleSearchResponse['organic_results'];
 
   const snippets: string[] = [];
 

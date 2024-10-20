@@ -1,38 +1,30 @@
+import axios from 'axios';
 import { ToolInterface } from './types';
-import { google } from 'googleapis';
-
-interface SearchParams {
-  q: string;
-  cx: string;
-  key: string;
-  num: number;
-}
-
-interface SearchResult {
-  snippet?: string;
-  [key: string]: unknown;
-}
+import dotenv from 'dotenv';
+import { SearchParams, SearchResult } from './types/GoogleSearchTool';
+dotenv.config();
 
 async function _googleSearchResults(params: SearchParams) {
-  const customSearch = google.customsearch('v1');
-  const response = await customSearch.cse.list({
-    cx: params.cx,
-    q: params.q,
-    auth: params.key,
-    num: params.num,
-  });
-  return response.data.items || ([] as SearchResult[]);
+  const url = 'https://www.searchapi.io/api/v1/search';
+
+  try {
+    const response = await axios.get<SearchResult>(url, { params });
+    return response.data.organic_results;
+  } catch (error) {
+    console.error('Error:', error);
+    return [];
+  }
 }
 
 async function search(query: string): Promise<string> {
   const params: SearchParams = {
     q: query,
-    cx: '<Your Custom Search Engine ID>',
-    key: '<Your Google API Key>',
-    num: 10,
+    engine: 'google',
+    api_key: process.env.SEARCH_API_KEY || '',
   };
 
-  const res = (await _googleSearchResults(params)) as SearchResult[];
+  const res = (await _googleSearchResults(params)) as SearchResult['organic_results'];
+
   const snippets: string[] = [];
 
   if (res.length === 0) {

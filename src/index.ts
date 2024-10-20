@@ -26,6 +26,7 @@ async function runAgent() {
   const result = await agent.run('Which move generated more money, avengers 1 or 2?');
   console.log(result);
 }
+
 // Playground example
 async function playground() {
   const pythonREPL = new TypescriptCodeRunnerTool();

@@ -6,7 +6,8 @@ dotenv.config();
 
 export class ChatLLM {
   private model = 'jamba-1.5-large';
-  private temperature = 0.4;
+  private temperature = 0.2;
+
   private apiKey: string;
 
   constructor(apiKey?: string, model?: string, temperature?: number) {
@@ -34,8 +35,6 @@ export class ChatLLM {
         {
           model: this.model,
           messages,
-          // documents,
-          // tools,
           n,
           max_tokens: maxTokens,
           temperature: this.temperature,

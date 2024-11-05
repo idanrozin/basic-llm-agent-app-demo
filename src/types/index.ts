@@ -6,8 +6,6 @@ export interface ToolInterface {
 
 export interface ChatLLMGeneratePayload {
   messages: Message[];
-  // documents?: Document[],
-  // tools?: Tool[],
   maxTokens?: number;
   stop?: string[];
   n?: number;

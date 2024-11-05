@@ -23,7 +23,9 @@ async function chatLLM() {
 // ReAct agent example
 async function runAgent() {
   const agent = new Agent(new ChatLLM(), [new GoogleSearchTool()]);
-  const result = await agent.run('Which move generated more money, avengers 1 or 2?');
+  const result = await agent.run(
+    'Which move generated more money, avengers 1 or 2? and how much each one has generated?',
+  );
   console.log(result);
 }
 
@@ -42,7 +44,7 @@ async function playground() {
 async function playgroundWithAgent() {
   const agent = new Agent(new ChatLLM(), [new GoogleSearchTool(), new JavascriptCodeRunnerTool()]);
   const result = await agent.run(
-    'Find me the cost of fuel of flying between tel aviv to houston in ILS, use Javascript',
+    'Find total cost of coffee consumption in a year in London. Search for average coffee price, typical consumption per day, and use JavaScript to calculate yearly expense in GBP including weekends vs weekdays',
   );
   console.log('Final answer is:', result);
 }

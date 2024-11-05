@@ -55,7 +55,18 @@ export class JavascriptCodeRunnerTool implements ToolInterface {
   }
 
   async use(inputText: string): Promise<string> {
-    inputText = inputText.trim().replace(/^```|```$/g, '');
-    return this.repl.run(inputText);
+    const cleanedString = cleanCode(inputText);
+    return this.repl.run(cleanedString);
   }
 }
+
+// a helper function to clean the code from the user input the tool is used with
+const cleanCode = (str: string): string => {
+  const prefix = '```javascript\n';
+  const suffix = '```';
+
+  if (str.startsWith(prefix) && str.endsWith(suffix)) {
+    return str.slice(prefix.length, -suffix.length);
+  }
+  return str;
+};

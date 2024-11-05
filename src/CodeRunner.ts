@@ -48,15 +48,15 @@ export class JavascriptCodeRunnerTool implements ToolInterface {
     'Input should be a valid Javascript command. ' +
     'If you want to see the output of a value, you should print it out ' +
     'with `console.log(...)`.';
-  repl: JavascriptCodeRunner;
+  jsRunner: JavascriptCodeRunner; // like REPL in python
 
   constructor() {
-    this.repl = getDefaultJavascriptCodeRunner();
+    this.jsRunner = getDefaultJavascriptCodeRunner();
   }
 
   async use(inputText: string): Promise<string> {
     const cleanedString = cleanCode(inputText);
-    return this.repl.run(cleanedString);
+    return this.jsRunner.run(cleanedString);
   }
 }
 

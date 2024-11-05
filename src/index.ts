@@ -29,10 +29,10 @@ async function runAgent() {
   console.log(result);
 }
 
-// Playground example
-async function playground() {
-  const REPL = new JavascriptCodeRunnerTool();
-  const result = await REPL.use('console.log(5*7)');
+// code runner example
+async function coding() {
+  const runner = new JavascriptCodeRunnerTool();
+  const result = await runner.use('console.log(5*7)');
 
   console.log('result:', result);
   const errorMessage = 'result should be 35';
@@ -40,8 +40,8 @@ async function playground() {
   assert(result === '35\n', errorMessage);
 }
 
-// Playground with agent example
-async function playgroundWithAgent() {
+// multi tool with agent, google search and code runner example
+async function multiTool() {
   const agent = new Agent(new ChatLLM(), [new GoogleSearchTool(), new JavascriptCodeRunnerTool()]);
   const result = await agent.run(
     'Find total cost of coffee consumption in a year in London. Search for average coffee price, typical consumption per day, and use JavaScript to calculate yearly expense in GBP including weekends vs weekdays',
@@ -53,8 +53,8 @@ const functionMap: { [key: string]: () => Promise<void> } = {
   googleSearch,
   chatLLM,
   runAgent,
-  playground,
-  playgroundWithAgent,
+  coding,
+  multiTool,
 };
 
 const functionName = process.argv[2];
@@ -63,7 +63,7 @@ if (functionName && functionName in functionMap) {
   functionMap[functionName]();
 } else {
   console.log(
-    'Please specify a valid function name: googleSearch, chatLLM, runAgent, playground, playgroundWithAgent',
+    'Please specify a valid function name: googleSearch, chatLLM, runAgent, coding, multiTool',
   );
   process.exit(1);
 }

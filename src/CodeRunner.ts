@@ -37,10 +37,6 @@ class JavascriptCodeRunner {
   }
 }
 
-function getDefaultJavascriptCodeRunner(): JavascriptCodeRunner {
-  return new JavascriptCodeRunner({ locals: null });
-}
-
 export class JavascriptCodeRunnerTool implements Tool {
   name = 'Javascript Code Runner';
   description: string =
@@ -48,15 +44,10 @@ export class JavascriptCodeRunnerTool implements Tool {
     'Input should be a valid Javascript command. ' +
     'If you want to see the output of a value, you should print it out ' +
     'with `console.log(...)`.';
-  jsRunner: JavascriptCodeRunner; // like REPL in python
-
-  constructor() {
-    this.jsRunner = getDefaultJavascriptCodeRunner();
-  }
 
   async use(inputText: string): Promise<string> {
     const cleanedString = cleanCode(inputText);
-    return this.jsRunner.run(cleanedString);
+    return new JavascriptCodeRunner({}).run(cleanedString);
   }
 }
 

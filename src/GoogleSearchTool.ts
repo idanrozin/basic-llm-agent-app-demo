@@ -1,11 +1,15 @@
 import axios from 'axios';
-import { ToolInterface } from './types';
+import { Tool } from './types';
 import dotenv from 'dotenv';
 import { GoogleSearchResponse, SearchParams } from './types/GoogleSearchTool';
-dotenv.config();
+
+dotenv.config({ override: true });
+
 const URL = 'https://serpapi.com/search';
 
-async function _googleSearchResults(params: SearchParams) {
+async function _googleSearchResults(
+  params: SearchParams,
+): Promise<GoogleSearchResponse['organic_results']> {
   try {
     const response = await axios.get<GoogleSearchResponse>(URL, { params });
     return response.data.organic_results;
@@ -22,7 +26,7 @@ async function search(query: string): Promise<string> {
     api_key: process.env.SEARCH_API_KEY || '',
   };
 
-  const res = (await _googleSearchResults(params)) as GoogleSearchResponse['organic_results'];
+  const res = await _googleSearchResults(params);
 
   const snippets: string[] = [];
 
@@ -39,7 +43,7 @@ async function search(query: string): Promise<string> {
   return snippets.join(' ');
 }
 
-class GoogleSearchTool implements ToolInterface {
+export class GoogleSearchTool implements Tool {
   name = 'Google Search';
   description =
     "Get specific information from a search query. Input should be a question like 'How to add number in Clojure?'. Result will be the answer to the question.";
@@ -48,5 +52,3 @@ class GoogleSearchTool implements ToolInterface {
     return search(inputText);
   }
 }
-
-export { GoogleSearchTool };

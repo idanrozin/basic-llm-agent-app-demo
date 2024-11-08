@@ -1,4 +1,4 @@
-import { ToolInterface } from './types';
+import { Tool } from './types';
 type Args = Map<string, unknown>;
 
 interface JavascriptCodeRunnerConstructor {
@@ -41,7 +41,7 @@ function getDefaultJavascriptCodeRunner(): JavascriptCodeRunner {
   return new JavascriptCodeRunner({ locals: null });
 }
 
-export class JavascriptCodeRunnerTool implements ToolInterface {
+export class JavascriptCodeRunnerTool implements Tool {
   name = 'Javascript Code Runner';
   description: string =
     'A Javascript code runner. Use this to execute Javascript commands. ' +

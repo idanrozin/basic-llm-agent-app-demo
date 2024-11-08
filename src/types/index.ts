@@ -1,4 +1,4 @@
-export interface ToolInterface {
+export interface Tool {
   name: string;
   description: string;
   use(inputText: string): Promise<string>;

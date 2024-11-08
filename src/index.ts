@@ -4,14 +4,9 @@ import { ChatLLM } from './ChatLLM';
 import { GoogleSearchTool } from './GoogleSearchTool';
 import { JavascriptCodeRunnerTool } from './CodeRunner';
 
-// google search tool example
-async function googleSearch() {
-  const googleSearchTool = new GoogleSearchTool();
-  const result = await googleSearchTool.use('Who is amit mandelbaum?');
-  console.log(result);
-}
-
 // llm example
+// docs: https://docs.ai21.com/reference/jamba-15-api-ref
+// api key: https://studio.ai21.com/
 async function chatLLM() {
   const llm = new ChatLLM();
   const llmResult = await llm.generate({
@@ -20,11 +15,19 @@ async function chatLLM() {
   console.log(llmResult);
 }
 
+// google search tool example
+// https://serpapi.com/
+async function googleSearch() {
+  const googleSearchTool = new GoogleSearchTool();
+  const result = await googleSearchTool.use('What is the weather today in Tokyo?');
+  console.log(result);
+}
+
 // ReAct agent example
 async function runAgent() {
   const agent = new Agent(new ChatLLM(), [new GoogleSearchTool()]);
   const result = await agent.run(
-    'Which move generated more money, avengers 1 or 2? and how much each one has generated?',
+    'how much money did the Titanic movie generate? how much money did the avatar movie generate? and who generated more money?',
   );
   console.log(result);
 }

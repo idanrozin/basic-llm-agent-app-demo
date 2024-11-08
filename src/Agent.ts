@@ -1,9 +1,10 @@
-import { ChatLLM } from './ChatLLM'; // Assuming you have this interface defined
-import { ToolInterface } from './types'; // Assuming you have this interface defined
+import { ChatLLM } from './ChatLLM';
+import { Tool } from './types';
 
 const FINAL_ANSWER_TOKEN = 'Final Answer:';
 const OBSERVATION_TOKEN = 'Observation:';
 const THOUGHT_TOKEN = 'Thought:';
+
 const PROMPT_TEMPLATE = `Today is {today} and you can use tools to get new information. Answer the question as best as you can using the following tools:
 
 {tool_description}
@@ -31,14 +32,14 @@ Thought: {previous_responses}
 
 class Agent {
   private llm: ChatLLM;
-  private tools: ToolInterface[];
+  private tools: Tool[];
   private promptTemplate: string;
   private maxLoops: number;
   private stopPattern: string[];
 
   constructor(
     llm: ChatLLM,
-    tools: ToolInterface[],
+    tools: Tool[],
     promptTemplate: string = PROMPT_TEMPLATE,
     maxLoops = 15,
     // The stop pattern is used, so the LLM does not hallucinate until the end
@@ -59,7 +60,7 @@ class Agent {
     return this.tools.map((tool) => tool.name).join(',');
   }
 
-  private get toolByNames(): { [key: string]: ToolInterface } {
+  private get toolByNames(): { [key: string]: Tool } {
     return Object.fromEntries(this.tools.map((tool) => [tool.name, tool]));
   }
 
@@ -70,10 +71,7 @@ class Agent {
       .replace('{today}', new Date().toISOString().split('T')[0])
       .replace('{tool_description}', this.toolDescription)
       .replace('{tool_names}', this.toolNames)
-      .replace('{question}', question)
-      .replace('{previous_responses}', '{previous_responses}');
-
-    console.log(prompt.replace('{previous_responses}', ''));
+      .replace('{question}', question);
 
     while (numLoops < this.maxLoops) {
       numLoops++;
